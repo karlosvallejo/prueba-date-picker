@@ -1,12 +1,13 @@
 import React, {PureComponent} from 'react';
-import DatePicker from "../../Components/DatePicker/DatePicker";
 import './Root.css';
+import DatePage from "../DatePage/DatePage";
 
 
 class Root extends PureComponent {
+
 	render() {
 		return (
-			<DatePicker/>
+			<DatePage/>
 		);
 	}
 }

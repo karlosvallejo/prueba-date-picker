@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import IDatePicker from "./IDatePicker";
+import './DatePicker.css';
+import * as IDatePicker from "./IDatePicker";
+export {IDatePicker};
 
-
-
-class DatePicker extends Component<{}, IDatePicker.IStateDatePicker> {
+class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.IStateDatePicker> {
 
 	exampleDate: IDatePicker.Date= {
 		possibleYears: [
@@ -27,7 +27,7 @@ class DatePicker extends Component<{}, IDatePicker.IStateDatePicker> {
 		]
 	};
 
-	constructor(props: {}) {
+	constructor(props: IDatePicker.IPropsDatePicker) {
 		super(props);
 		this.state = {
 			chosenDate: null
@@ -35,15 +35,18 @@ class DatePicker extends Component<{}, IDatePicker.IStateDatePicker> {
 	}
 
 	componentDidMount() {
-		this.setState({chosenDate: this.exampleDate})
+		this.setState({chosenDate: this.exampleDate}, () => {
+			if (this.state.chosenDate) {
+				this.props.chosenDateCallback(this.state.chosenDate);
+			}
+		});
 	}
 
 	render() {
         return (
-        	
-            <pre>
-	            {JSON.stringify(this.state.chosenDate, null, 4)}
-            </pre>
+        	<div className={'DatePicker-wrapper'}>
+
+	        </div>
         );
     }
 }

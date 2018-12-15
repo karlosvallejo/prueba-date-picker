@@ -4,7 +4,7 @@ import DatePicker, {IDatePicker} from "../../Components/DatePicker/DatePicker";
 
 
 
-interface IStateDataPage extends IDatePicker.IStateDatePicker {
+interface IStateDataPage extends  IDatePicker.GeneralIStateDatePicker {
 
 }
 

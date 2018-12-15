@@ -1,5 +1,6 @@
 .DatePicker-wrapper {
     width: 15%;
-    height: 20%;
+    height: 30%;
     background: red;
+    overflow: auto;
 }

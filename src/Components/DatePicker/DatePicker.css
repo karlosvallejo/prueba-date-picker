@@ -2,5 +2,32 @@
     width: 30%;
     height: 30%;
     background: red;
+    display: flex;
+    flex-direction: column;
+}
+.DatePicker-selectors-wrapper {
+
+}
+.DatePicker-days-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: blue;
     overflow: auto;
+}
+
+.DatePicker-days-day {
+    margin: 1%;
+    width: 12%;
+    background-color: rosybrown;
+}
+
+.DatePicker-days-day--active {
+    background-color: yellow;
+}
+
+.DatePicker-days-day p {
+    margin: 0;
+    text-align: center;
 }

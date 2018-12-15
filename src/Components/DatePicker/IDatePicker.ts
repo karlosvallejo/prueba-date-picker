@@ -5,6 +5,7 @@ export interface GeneralIStateDatePicker {
 export interface IStateDatePicker extends GeneralIStateDatePicker{
 	currentYear: number;
 	currentMonth: number;
+	daysForHighlight: Array<number> | null;
 }
 
 export interface IPropsDatePicker {

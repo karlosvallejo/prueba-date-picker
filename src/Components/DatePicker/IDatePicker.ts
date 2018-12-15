@@ -1,28 +1,6 @@
 export interface GeneralIStateDatePicker {
-    chosenDate: Date | null;
+    chosenDate: Date;
 }
-
-const f2 = {
-	possibleYears: {
-		1999: {
-			possibleMonths: {
-				10: {
-					days: [10,12,11]
-				},
-				12: {
-					days: [5, 8, 9]
-				}
-			}
-		},
-		2000: {
-			possibleMonths: {
-				1: {
-					days: [1,2,3,4,5,6]
-				}
-			}
-		}
-	}
-};
 
 export interface IStateDatePicker extends GeneralIStateDatePicker{
 	currentYear: number;

@@ -11,4 +11,6 @@
 
 .DatePage-wrapper pre {
     margin: 0;
+    height: 50%;
+    overflow: auto;
 }

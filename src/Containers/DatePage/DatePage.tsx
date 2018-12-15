@@ -13,7 +13,7 @@ class DatePage extends Component<{}, IStateDataPage> {
 	constructor(props: {}) {
 		super(props);
 		this.state = {
-			chosenDate: null
+			chosenDate: {possibleYears: []}
 		}
 	}
 

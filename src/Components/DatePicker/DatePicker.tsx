@@ -30,7 +30,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	constructor(props: IDatePicker.IPropsDatePicker) {
 		super(props);
 		this.state = {
-			chosenDate: null,
+			chosenDate: {possibleYears: []},
 			currentYear: 2018,
 			currentMonth: 12
 		};
@@ -38,9 +38,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 
 	componentDidMount() {
 		this.setState({chosenDate: this.exampleDate}, () => {
-			if (this.state.chosenDate) {
 				this.props.chosenDateCallback(this.state.chosenDate);
-			}
 		});
 	}
 
@@ -146,23 +144,49 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		return 'Wrong Month';
 	}
 
-	defineChosenDate(i : number, event: React.MouseEvent<HTMLDivElement>) {
-
+	updateChosenDate(i : number, event: React.MouseEvent<HTMLDivElement>) {
+		this.determineNewDate(i).then((date: IDatePicker.Date) => {
+			this.setState({chosenDate: date}, () => {
+				this.props.chosenDateCallback(date);
+			});
+		});
 	}
 
-	determineNewDate() {
-		const { chosenDate } = this.state;
-		if (chosenDate) {
-			chosenDate.possibleYears.forEach((yearObject: IDatePicker.Year) => {
-				if (yearObject.year === this.state.currentYear) {
-
+	determineNewDate(_daySelected: number): Promise<IDatePicker.Date> {
+		return new Promise<IDatePicker.Date>((resolve, reject) => {
+			const { chosenDate } = this.state;
+			const { currentYear } = this.state;
+			const { currentMonth } = this.state;
+			const selectedDay = _daySelected;
+			let yearFound: boolean = false;
+			let monthFound: boolean = false;
+			chosenDate.possibleYears.forEach(year => {
+				if (year.year === currentYear) {
+					yearFound = true;
+					year.possibleMonths.forEach(month => {
+						if (month.month === currentMonth) {
+							monthFound = true;
+							month.days = Array.from(new Set([...month.days ,...[selectedDay]])).sort((a, b) => a - b);
+						}
+					}) ;
 				}
 			});
-		}
 
-		function createYearObject(): IDatePicker.Year {
-			return 4 as any;
-		}
+			if (!yearFound) {
+				//year no found, add year object
+				const year: IDatePicker.Year = {year: currentYear, possibleMonths: [{month: currentMonth, days: [selectedDay]}]};
+				chosenDate.possibleYears.push(year);
+			} else if (!monthFound) {
+				//year found, but no month. Add month object yo the current year
+				const month: IDatePicker.Month = {month: currentMonth, days: [selectedDay]};
+				chosenDate.possibleYears.forEach((year) => {
+					if (year.year === currentYear) {
+						year.possibleMonths.push(month);
+					}
+				});
+			}
+			resolve(chosenDate);
+		});
 	}
 
 	handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -189,7 +213,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
                     <select name={'months'} id={'months'} value={this.state.currentMonth} onChange={this.handleSelect.bind(this)}>
                         {this.generateMonths()}
                     </select>
-					{this.generateDays(this.state.currentMonth, this.defineChosenDate)}
+					{this.generateDays(this.state.currentMonth, this.updateChosenDate.bind(this))}
                 </div>
 	        </div>
         );

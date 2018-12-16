@@ -6,8 +6,9 @@ export interface IStateDatePicker extends GeneralIStateDatePicker{
 	currentYear: number;
 	currentMonth: number;
 	daysForHighlight: Array<number> | null;
-	dropDown: ('YEARS' | 'MONTHS') | null;
-	dropdownIsHidden: boolean;
+	dropDownElements: ('YEARS' | 'MONTHS') | null;
+	showDropDown: boolean;
+	dropDownIsHidden: boolean;
 	rangeSelection: rangeSelection;
 }
 

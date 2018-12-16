@@ -42,7 +42,7 @@
 }
 
 .DatePicker-inferiorSection-yearsOptions-wrapper {
-    transition: transform 700ms ease-out;
+    transition: transform 700ms ease-in-out;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -53,7 +53,7 @@
 .DatePicker-inferiorSection-yearsOptions-wrapper--active {
     animation-name: dropDown;
     animation-duration: 700ms;
-    animation-timing-function: ease-in;
+    animation-timing-function: ease-in-out;
     transform: translateY(0);
 }
 @keyframes dropDown {

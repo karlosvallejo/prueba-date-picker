@@ -1,46 +1,30 @@
 import React, {Component} from 'react';
 import './DatePicker.css';
 import * as IDatePicker from "./IDatePicker";
+import {Year} from "./IDatePicker";
 export {IDatePicker};
 
 class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.IStateDatePicker> {
 
-	exampleDate: IDatePicker.Date = {
-		possibleYears: [
-			{
-				year: 1999, possibleMonths: [
-					{
-						month: 10, days: [4, 5, 6]
-					},
-					{
-						month: 12, days: [29, 30, 31]
-					},
-				]
-			},
-			{
-				year: 2000, possibleMonths: [
-					{
-						month: 1, days: [10, 16, 25]
-					}
-				]
-			}
-		]
-	};
 
 	constructor(props: IDatePicker.IPropsDatePicker) {
 		super(props);
 		this.state = {
 			chosenDate: {possibleYears: []},
-			currentYear: 2018,
-			currentMonth: 12,
-			daysForHighlight: null
+			currentYear: new Date().getFullYear(),
+			currentMonth: new Date().getMonth() + 1,
+			daysForHighlight: null,
+			rangeSelection: {rangeSelectionActive: false,  rangeSelectionSecondPickResolver: this.handleRangePick.bind(this), rangeSelectionFirstSelection: null, rangeSelectionSecondSelection: null}
 		};
 	}
 
 	componentDidMount() {
+		/*
 		this.setState({chosenDate: this.exampleDate}, () => {
 				this.props.chosenDateCallback(this.state.chosenDate);
 		});
+		*/
+		console.log(this.state);
 	}
 
 	componentDidUpdate(prevProps: Readonly<IDatePicker.IPropsDatePicker>, prevState: Readonly<IDatePicker.IStateDatePicker>, snapshot?: any) {
@@ -49,7 +33,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		}
 	}
 
-	generateDays(monthNumber: number, handler:(i: number, event: React.MouseEvent<HTMLDivElement>) => void): JSX.Element[] {
+	generateDays(monthNumber: number): JSX.Element[] {
 		let totalDays: number = 20;
 		switch (monthNumber) {
 			case 1:
@@ -102,7 +86,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
         }
 
 		return [...Array<JSX.Element>(totalDays)].map((val, index) => {
-            return <div key={index + 1} className={this.state.daysForHighlight? this.state.daysForHighlight.includes(index + 1)? 'DatePicker-days-day DatePicker-days-day--active': 'DatePicker-days-day': 'DatePicker-days-day'} onClick={(event: React.MouseEvent<HTMLDivElement>) => handler(index + 1, event)}><p>{index + 1}</p></div>
+            return <div key={index + 1} className={this.state.daysForHighlight && this.state.daysForHighlight.includes(index + 1)? 'DatePicker-days-day DatePicker-days-day--active': 'DatePicker-days-day'} onClick={this.state.rangeSelection.rangeSelectionActive? (event: React.MouseEvent<HTMLDivElement>) => this.state.rangeSelection.rangeSelectionSecondPickResolver(index + 1) : (event: React.MouseEvent<HTMLDivElement>) => this.updateChosenDate(index + 1, event)}><p>{index + 1}</p></div>
 		})
 	}
 
@@ -227,6 +211,28 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		return daysForDisplay;
 	}
 
+	handleButtonRangeSelection(event: React.MouseEvent<HTMLButtonElement>, isRange: boolean) {
+		const { rangeSelection } = this.state;
+		Object.assign(rangeSelection, {rangeSelectionActive: isRange});
+		console.log(rangeSelection);
+		this.setState({rangeSelection: rangeSelection});
+	}
+
+	handleRangePick(currentDay: number) {
+		const { rangeSelection } = this.state;
+		this.determineNewDate(currentDay).then((date: IDatePicker.Date) => {
+			console.log(date);
+		});
+		new Promise<Year>((resolve, reject) => {
+			Object.assign(rangeSelection, {rangeSelectionSecondPickResolver: resolve});
+			this.setState({rangeSelection: rangeSelection});
+		}).then((year: IDatePicker.Year) => {
+			console.log(year);
+			Object.assign(rangeSelection, {rangeSelectionSecondPickResolver: this.handleRangePick.bind(this)});
+			this.setState({rangeSelection: rangeSelection});
+		});
+	}
+
 	render() {
         return (
         	<div className={'DatePicker-wrapper'}>
@@ -237,9 +243,11 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	                    <select name={'months'} id={'months'} value={this.state.currentMonth} onChange={this.handleSelect.bind(this)}>
 	                        {this.generateMonths()}
 	                    </select>
+						<button type={'button'} disabled={this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, true)}>Range Selection</button>
+						<button type={'button'} disabled={!this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, false)}>Single Selection</button>
 					</div>
 					<div className={'DatePicker-days-wrapper'}>
-						{this.generateDays(this.state.currentMonth, this.updateChosenDate.bind(this))}
+						{this.generateDays(this.state.currentMonth)}
 					</div>
 	        </div>
         );

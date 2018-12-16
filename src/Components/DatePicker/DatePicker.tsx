@@ -38,57 +38,62 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		}
 	}
 
-	generateDays(monthNumber: number): JSX.Element[] {
-		let totalDays: number = 20;
+	getNumbersOfDaysFromMonth(monthNumber: number): number {
+		let days: number = 20;
 		switch (monthNumber) {
 			case 1:
-				totalDays = 31;
-			break;
+				days = 31;
+				break;
 
 			case 2:
-				totalDays = 28;
-			break;
+				days = 28;
+				break;
 
 			case 3:
-				totalDays = 31;
-			break;
+				days = 31;
+				break;
 
 			case 4:
-				totalDays = 30;
-			break;
+				days = 30;
+				break;
 
 			case 5:
-				totalDays = 31;
-			break;
+				days = 31;
+				break;
 
 			case 6:
-				totalDays = 30;
-			break;
+				days = 30;
+				break;
 
 			case 7:
-				totalDays = 31;
-			break;
+				days = 31;
+				break;
 
 			case 8:
-				totalDays = 31;
-			break;
+				days = 31;
+				break;
 
 			case 9:
-				totalDays = 30;
-			break;
+				days = 30;
+				break;
 
 			case 10:
-				totalDays = 31;
-			break;
+				days = 31;
+				break;
 
 			case 11:
-				totalDays = 30;
-			break;
+				days = 30;
+				break;
 
 			case 12:
-				totalDays = 31;
-			break;
-        }
+				days = 31;
+				break;
+		}
+		return days;
+	}
+
+	generateDays(monthNumber: number): JSX.Element[] {
+		let totalDays: number = this.getNumbersOfDaysFromMonth(monthNumber);
 
 		return [...Array<JSX.Element>(totalDays)].map((val, index) => {
             return <div key={index + 1} className={this.state.daysForHighlight && this.state.daysForHighlight.includes(index + 1)? 'DatePicker-days-day DatePicker-days-day--active': 'DatePicker-days-day'} onClick={this.state.rangeSelection.rangeSelectionActive? (event: React.MouseEvent<HTMLDivElement>) => this.state.rangeSelection.rangeSelectionSecondPickResolver(index + 1) : (event: React.MouseEvent<HTMLDivElement>) => this.updateChosenDate(index + 1, event)}><p>{index + 1}</p></div>
@@ -141,17 +146,14 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	updateChosenDate(i : number, event: React.MouseEvent<HTMLDivElement>) {
-		this.determineNewDate(i).then((date: IDatePicker.Date) => {
-			this.setState({chosenDate: {...date}});
-		});
+		this.setState({chosenDate: this.determineNewDate({year: this.state.currentYear, possibleMonths: [{month: this.state.currentMonth, days: [i]}]}, this.state.chosenDate)});
 	}
 
-	determineNewDate(_daySelected: number): Promise<IDatePicker.Date> {
-		return new Promise<IDatePicker.Date>((resolve, reject) => {
-			const chosenDate = cloneDeep(this.state.chosenDate);
-			const currentYear = cloneDeep(this.state.currentYear);
-			const currentMonth = cloneDeep(this.state.currentMonth);
-			const selectedDay = _daySelected;
+	determineNewDate(yearForInsert: IDatePicker.Year, targetDate: IDatePicker.Date): IDatePicker.Date {
+			const chosenDate = cloneDeep(targetDate);
+			const currentYear = yearForInsert.year;
+			const currentMonth = yearForInsert.possibleMonths[0].month;
+			const selectedDay = yearForInsert.possibleMonths[0].days[0];
 			let yearFound: boolean = false;
 			let monthFound: boolean = false;
 			chosenDate.possibleYears.forEach(year => {
@@ -179,8 +181,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 					}
 				});
 			}
-			resolve(chosenDate);
-		});
+			return chosenDate;
 	}
 
 	buildYearObject(currentYear: number, currentMonth: number, selectedDay: number): IDatePicker.Year {
@@ -236,11 +237,41 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		}).then((secondCurrentDay: number) => {
 			secondPick = this.buildYearObject(cloneDeep(this.state.currentYear), cloneDeep(this.state.currentMonth), secondCurrentDay);
 			Object.assign(rangeSelection, {rangeSelectionSecondPickResolver: this.handleRangePick.bind(this)});
-			this.setState({rangeSelection: rangeSelection});
+			this.setState({rangeSelection: rangeSelection},() => {
+				this.makeRange(firstPick, secondPick);
+			});
 		});
 	}
 
 	makeRange(firstPick: IDatePicker.Year, secondPick: IDatePicker.Year) {
+		const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+		const firstDay = new Date(firstPick.year, firstPick.possibleMonths[0].month, firstPick.possibleMonths[0].days[0]);
+		const secondDay = new Date(secondPick.year, secondPick.possibleMonths[0].month, secondPick.possibleMonths[0].days[0]);
+		const difference = (secondDay.getTime() - firstDay.getTime())/(oneDay);
+		let totalDays = difference + 1;
+		const currentDay = cloneDeep(firstPick);
+		const yearsArray: IDatePicker.Year[] = [];
+
+		while (totalDays > 0) {
+			const yearFromDay: IDatePicker.Year = {year: currentDay.year, possibleMonths: [{month: currentDay.possibleMonths[0].month, days: currentDay.possibleMonths[0].days}]};
+			if (((currentDay.possibleMonths[0].days[0]) + 1) <= this.getNumbersOfDaysFromMonth(currentDay.possibleMonths[0].month)) {
+				// Next Day
+				yearsArray.push(cloneDeep(currentDay));
+				currentDay.possibleMonths[0].days[0]++;
+			} else if (((currentDay.possibleMonths[0].month) + 1) <= 12) {
+				// Next Month
+				yearsArray.push(cloneDeep(currentDay));
+				currentDay.possibleMonths[0].month++;
+			} else {
+				// Next Year
+				yearsArray.push(cloneDeep(currentDay));
+				currentDay.year++;
+			}
+
+			totalDays--
+		}
+
+		console.log(yearsArray);
 
 	}
 

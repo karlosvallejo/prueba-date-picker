@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { cloneDeep, isEqual } from 'lodash';
+import moment from 'moment';
 import './DatePicker.css';
 import * as IDatePicker from "./IDatePicker";
-import moment from 'moment';
 export {IDatePicker};
 
 class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.IStateDatePicker> {
@@ -106,7 +106,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	generateYears(min: number, max: number): JSX.Element[] {
 		const yearsOptions: JSX.Element[] = [];
 		for (let index = min; index <= max; index++) {
-			yearsOptions.push(<div key={index} onClick={()=> this.onYearSelect(index)}>{index}</div>);
+			yearsOptions.push(<div className={'DatePicker-inferiorSection-yearsOptions-year'} key={index} onClick={()=> this.onYearSelect(index)}><p>{index}</p></div>);
 		}
 		return yearsOptions;
 	}
@@ -114,7 +114,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
     generateMonths(): JSX.Element[] {
         return [...Array<JSX.Element>(12)].map((val: JSX.Element, index: number) => {
         	const monthName: string = this.nameMonth(index + 1);
-        	return <div key={monthName} onClick={()=> this.onMonthSelect(index + 1)}>{monthName}</div>
+        	return <div className={'DatePicker-inferiorSection-yearsOptions-month'} key={monthName} onClick={()=> this.onMonthSelect(index + 1)}><p>{monthName}</p></div>
         });
     }
 
@@ -192,11 +192,11 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	onYearSelect(year: number) {
-		this.setState({currentYear: year, dropDownElements: null});
+		this.setState({currentYear: year, showDropDown: false});
 	}
 
 	onMonthSelect(month: number) {
-		this.setState({currentMonth: month, dropDownElements: null});
+		this.setState({currentMonth: month, showDropDown: false});
 	}
 
 
@@ -283,21 +283,23 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 
 	render() {
         return (
-        	<div className={'DatePicker-wrapper'}>
-					<div className={'DatePicker-selectors-wrapper'}>
-	                    <div onClick={() => {this.state.dropDownIsHidden? this.setState({showDropDown: true, dropDownElements: 'YEARS'}): this.setState({showDropDown: false})}}>{this.state.currentYear}</div>
-						<div onClick={() => {this.state.dropDownIsHidden? this.setState({showDropDown: true, dropDownElements: 'MONTHS'}): this.setState({showDropDown: false})}}>{this.nameMonth(this.state.currentMonth)}</div>
-						<button type={'button'} disabled={this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, true)}>Range Selection</button>
-						<button type={'button'} disabled={!this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, false)}>Single Selection</button>
-					</div>
-		            <div className={'DatePicker-inferiorSection-wrapper'}>
-						<div className={'DatePicker-inferiorSection-days-wrapper'}>
-							{this.generateDays(this.state.currentMonth)}
+	        <div className={'DatePicker-wrapper-general'}>
+	            <div className={'DatePicker-wrapper'}>
+						<div className={'DatePicker-selectors-wrapper'}>
+		                    <div className={'DatePicker-selectors-years'} onClick={() => {this.state.dropDownIsHidden? this.setState({showDropDown: true, dropDownElements: 'YEARS'}): this.setState({showDropDown: false})}}><p>{this.state.currentYear}</p></div>
+							<div className={'DatePicker-selectors-months'} onClick={() => {this.state.dropDownIsHidden? this.setState({showDropDown: true, dropDownElements: 'MONTHS'}): this.setState({showDropDown: false})}}><p>{this.nameMonth(this.state.currentMonth)}</p></div>
+							<button className={'DatePicker-selectors-range'} type={'button'} disabled={this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, true)}>Range Selection</button>
+							<button className={'DatePicker-selectors-single'} type={'button'} disabled={!this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, false)}>Single Selection</button>
 						</div>
-			            <div onAnimationEnd={this.onDropDownIsVisible.bind(this)} onTransitionEnd={this.onDropDownIsHidden.bind(this)} className={this.state.showDropDown? 'DatePicker-inferiorSection-yearsOptions-wrapper DatePicker-inferiorSection-yearsOptions-wrapper--active': 'DatePicker-inferiorSection-yearsOptions-wrapper'}>
-				            {this.state.dropDownElements === 'YEARS'? this.generateYears(2000, 2025): this.state.dropDownElements === 'MONTHS'? this.generateMonths(): null}
+			            <div className={'DatePicker-inferiorSection-wrapper'}>
+							<div className={'DatePicker-inferiorSection-days-wrapper'}>
+								{this.generateDays(this.state.currentMonth)}
+							</div>
+				            <div onAnimationEnd={this.onDropDownIsVisible.bind(this)} onTransitionEnd={this.onDropDownIsHidden.bind(this)} className={this.state.showDropDown? 'DatePicker-inferiorSection-yearsOptions-wrapper DatePicker-inferiorSection-yearsOptions-wrapper--active': 'DatePicker-inferiorSection-yearsOptions-wrapper'}>
+					            {this.state.dropDownElements === 'YEARS'? this.generateYears(2000, 2025): this.state.dropDownElements === 'MONTHS'? this.generateMonths(): null}
+				            </div>
 			            </div>
-		            </div>
+		        </div>
 	        </div>
         );
     }

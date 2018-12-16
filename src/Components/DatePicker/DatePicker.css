@@ -1,12 +1,50 @@
-.DatePicker-wrapper {
+.DatePicker-wrapper-general {
+    position: relative;
     width: 30%;
-    height: 30%;
-    background: red;
+    padding-bottom: 15%;
+}
+
+.DatePicker-wrapper {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(254,254,254, 1);
+    outline: solid rgba(238,238,238 ,1) 0.1vw;
+    box-shadow: 0.1vw 0.1vh 0.5vw rgba(158,158,158 ,0.5);
     display: flex;
     flex-direction: column;
 }
 .DatePicker-selectors-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 1vh 0.5vw;
+    box-sizing: border-box;
+    border-bottom: solid 0.15vh rgba(158,158,158 ,0.3);
+}
 
+.DatePicker-selectors-years {
+    flex-grow: 1;
+}
+
+.DatePicker-selectors-years p {
+    margin: 0;
+}
+
+.DatePicker-selectors-months {
+    flex-grow: 1;
+}
+
+.DatePicker-selectors-months p {
+    margin: 0;
+}
+
+.DatePicker-selectors-range {
+    flex-grow: 1;
+}
+
+.DatePicker-selectors-single {
+    flex-grow: 1;
 }
 
 .DatePicker-inferiorSection-wrapper {
@@ -14,7 +52,6 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    background-color:green;
     overflow: hidden;
 }
 .DatePicker-inferiorSection-days-wrapper {
@@ -22,18 +59,29 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    background-color: blue;
     overflow: auto;
+    padding-top: 2%;
 }
 
 .DatePicker-days-day {
-    margin: 1%;
-    width: 12%;
-    background-color: rosybrown;
+    transition: background-color 200ms ease-in;
+    background-color: rgba(254,254,254 ,1);
+    margin: 0.15%;
+    width: 12.2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .DatePicker-days-day--active {
-    background-color: yellow;
+    color: rgba(255,255,255,0.8);
+    background-color: rgba(100,181,246 ,1);
+}
+
+.DatePicker-days-day:hover {
+    transition: 900ms ease-in;
+    color: rgba(255,255,255,1);
+    background-color: rgba(187,222,251 ,1);
 }
 
 .DatePicker-days-day p {
@@ -42,21 +90,53 @@
 }
 
 .DatePicker-inferiorSection-yearsOptions-wrapper {
-    transition: transform 700ms ease-in-out;
+    transition: transform 500ms ease-in-out;
     position: absolute;
     width: 100%;
     height: 100%;
     background-color: white;
+    display: flex;
+    flex-wrap: wrap;
     transform: translateY(-100%);
 }
 
 .DatePicker-inferiorSection-yearsOptions-wrapper--active {
     animation-name: dropDown;
-    animation-duration: 700ms;
+    animation-duration: 500ms;
     animation-timing-function: ease-in-out;
     transform: translateY(0);
 }
+
 @keyframes dropDown {
     from {transform: translateY(-100%);}
     to {transform: translateY(0);}
+}
+
+.DatePicker-inferiorSection-yearsOptions-year {
+    margin: 0.2%;
+    width: 13.86%;
+    background-color: #61dafb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: space-around;
+}
+
+.DatePicker-inferiorSection-yearsOptions-year p {
+   margin: 0;
+    text-align: center;
+}
+
+.DatePicker-inferiorSection-yearsOptions-month {
+    margin: 0.2%;
+    width: 16.26%;
+    background-color: #61dafb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.DatePicker-inferiorSection-yearsOptions-month p {
+    margin: 0;
+    text-align: center;
 }

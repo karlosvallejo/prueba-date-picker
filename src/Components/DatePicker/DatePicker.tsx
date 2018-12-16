@@ -291,9 +291,14 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 						<button type={'button'} disabled={this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, true)}>Range Selection</button>
 						<button type={'button'} disabled={!this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, false)}>Single Selection</button>
 					</div>
-					<div className={'DatePicker-days-wrapper'}>
-						{this.generateDays(this.state.currentMonth)}
-					</div>
+		            <div className={'DatePicker-inferiorSection-wrapper'}>
+						<div className={'DatePicker-inferiorSection-days-wrapper'}>
+								{this.generateDays(this.state.currentMonth)}
+						</div>
+			            <div className={'DatePicker-inferiorSection-yearsOptions-wrapper'}>
+
+			            </div>
+		            </div>
 	        </div>
         );
     }

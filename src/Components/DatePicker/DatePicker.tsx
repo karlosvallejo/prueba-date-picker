@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { cloneDeep, isEqual } from 'lodash';
 import './DatePicker.css';
 import * as IDatePicker from "./IDatePicker";
 import {Year} from "./IDatePicker";
@@ -24,12 +25,16 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 				this.props.chosenDateCallback(this.state.chosenDate);
 		});
 		*/
-		console.log(this.state);
 	}
 
 	componentDidUpdate(prevProps: Readonly<IDatePicker.IPropsDatePicker>, prevState: Readonly<IDatePicker.IStateDatePicker>, snapshot?: any) {
-		if (this.state.daysForHighlight != this.getDisplayDays()) {
-			this.setState( {daysForHighlight: this.getDisplayDays()});
+		const daysToDisplay = this.getDisplayDays();
+		if (!isEqual(this.state.daysForHighlight, daysToDisplay)) {
+			this.setState({daysForHighlight: daysToDisplay});
+		}
+
+		if (!isEqual(prevState.chosenDate, this.state.chosenDate)) {
+			this.props.chosenDateCallback(this.state.chosenDate);
 		}
 	}
 
@@ -137,17 +142,15 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 
 	updateChosenDate(i : number, event: React.MouseEvent<HTMLDivElement>) {
 		this.determineNewDate(i).then((date: IDatePicker.Date) => {
-			this.setState({chosenDate: date}, () => {
-				this.props.chosenDateCallback(date);
-			});
+			this.setState({chosenDate: {...date}});
 		});
 	}
 
 	determineNewDate(_daySelected: number): Promise<IDatePicker.Date> {
 		return new Promise<IDatePicker.Date>((resolve, reject) => {
-			const { chosenDate } = this.state;
-			const { currentYear } = this.state;
-			const { currentMonth } = this.state;
+			const chosenDate = cloneDeep(this.state.chosenDate);
+			const currentYear = cloneDeep(this.state.currentYear);
+			const currentMonth = cloneDeep(this.state.currentMonth);
 			const selectedDay = _daySelected;
 			let yearFound: boolean = false;
 			let monthFound: boolean = false;
@@ -181,7 +184,8 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
-		let { currentYear, currentMonth } = this.state;
+		let currentYear = cloneDeep(this.state.currentYear);
+		let currentMonth = cloneDeep(this.state.currentMonth);
 		const id = event.target.id;
         const value = parseInt(event.target.value);
         console.log(id);
@@ -197,7 +201,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	getDisplayDays (): number[] | null {
-		const { chosenDate } = this.state;
+		const chosenDate = cloneDeep(this.state.chosenDate);
 		let daysForDisplay: number[] | null = null;
 		chosenDate.possibleYears.forEach((year) => {
 			if (year.year === this.state.currentYear) {
@@ -212,14 +216,13 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	handleButtonRangeSelection(event: React.MouseEvent<HTMLButtonElement>, isRange: boolean) {
-		const { rangeSelection } = this.state;
+		const rangeSelection = cloneDeep(this.state.rangeSelection);
 		Object.assign(rangeSelection, {rangeSelectionActive: isRange});
-		console.log(rangeSelection);
 		this.setState({rangeSelection: rangeSelection});
 	}
 
 	handleRangePick(currentDay: number) {
-		const { rangeSelection } = this.state;
+		const rangeSelection = cloneDeep(this.state.rangeSelection);
 		this.determineNewDate(currentDay).then((date: IDatePicker.Date) => {
 			console.log(date);
 		});

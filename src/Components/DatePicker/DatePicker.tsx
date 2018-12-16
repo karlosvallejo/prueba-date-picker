@@ -271,7 +271,6 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 
 			totalDays--;
 		}
-		
 		let newDate: IDatePicker.Date = cloneDeep(this.state.chosenDate);
 		yearsArray.forEach((year: IDatePicker.Year) => {
 			newDate = this.determineNewDate(year, newDate);

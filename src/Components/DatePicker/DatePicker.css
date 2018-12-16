@@ -10,10 +10,12 @@
 }
 
 .DatePicker-inferiorSection-wrapper {
+    position: relative;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     background-color:green;
+    overflow: hidden;
 }
 .DatePicker-inferiorSection-days-wrapper {
     flex-grow: 1;
@@ -40,5 +42,21 @@
 }
 
 .DatePicker-inferiorSection-yearsOptions-wrapper {
+    transition: transform 700ms ease-out;
     position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    transform: translateY(-100%);
+}
+
+.DatePicker-inferiorSection-yearsOptions-wrapper--active {
+    animation-name: dropDown;
+    animation-duration: 700ms;
+    animation-timing-function: ease-in;
+    transform: translateY(0);
+}
+@keyframes dropDown {
+    from {transform: translateY(-100%);}
+    to {transform: translateY(0);}
 }

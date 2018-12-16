@@ -295,7 +295,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 						<div className={'DatePicker-inferiorSection-days-wrapper'}>
 								{this.generateDays(this.state.currentMonth)}
 						</div>
-			            <div className={'DatePicker-inferiorSection-yearsOptions-wrapper'}>
+			            <div className={this.state.rangeSelection.rangeSelectionActive? 'DatePicker-inferiorSection-yearsOptions-wrapper DatePicker-inferiorSection-yearsOptions-wrapper--active': 'DatePicker-inferiorSection-yearsOptions-wrapper'}>
 
 			            </div>
 		            </div>

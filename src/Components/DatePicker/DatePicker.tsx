@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { cloneDeep, isEqual } from 'lodash';
 import './DatePicker.css';
 import * as IDatePicker from "./IDatePicker";
-import {Year} from "./IDatePicker";
+import moment from 'moment';
 export {IDatePicker};
 
 class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.IStateDatePicker> {
@@ -244,35 +244,39 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	makeRange(firstPick: IDatePicker.Year, secondPick: IDatePicker.Year) {
-		const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-		const firstDay = new Date(firstPick.year, firstPick.possibleMonths[0].month, firstPick.possibleMonths[0].days[0]);
-		const secondDay = new Date(secondPick.year, secondPick.possibleMonths[0].month, secondPick.possibleMonths[0].days[0]);
-		const difference = (secondDay.getTime() - firstDay.getTime())/(oneDay);
-		let totalDays = difference + 1;
+		const firstDay = moment(`${firstPick.possibleMonths[0].days[0]}/${firstPick.possibleMonths[0].month}/${firstPick.year}`, 'DD/MM/YYYY');
+		const secondDay = moment(`${secondPick.possibleMonths[0].days[0]}/${secondPick.possibleMonths[0].month}/${secondPick.year}`, 'DD/MM/YYYY');
+		let totalDays = secondDay.diff(firstDay, 'days');
 		const currentDay = cloneDeep(firstPick);
 		const yearsArray: IDatePicker.Year[] = [];
+		yearsArray.push(cloneDeep(currentDay));
 
 		while (totalDays > 0) {
-			const yearFromDay: IDatePicker.Year = {year: currentDay.year, possibleMonths: [{month: currentDay.possibleMonths[0].month, days: currentDay.possibleMonths[0].days}]};
-			if (((currentDay.possibleMonths[0].days[0]) + 1) <= this.getNumbersOfDaysFromMonth(currentDay.possibleMonths[0].month)) {
+			if ((currentDay.possibleMonths[0].days[0] + 1) <= this.getNumbersOfDaysFromMonth(currentDay.possibleMonths[0].month)) {
 				// Next Day
-				yearsArray.push(cloneDeep(currentDay));
 				currentDay.possibleMonths[0].days[0]++;
-			} else if (((currentDay.possibleMonths[0].month) + 1) <= 12) {
-				// Next Month
 				yearsArray.push(cloneDeep(currentDay));
+			} else if ((currentDay.possibleMonths[0].month + 1) <= 12) {
+				// Next Month
 				currentDay.possibleMonths[0].month++;
+				currentDay.possibleMonths[0].days[0] = 1;
+				yearsArray.push(cloneDeep(currentDay));
 			} else {
 				// Next Year
-				yearsArray.push(cloneDeep(currentDay));
 				currentDay.year++;
+				currentDay.possibleMonths[0].month = 1;
+				currentDay.possibleMonths[0].days[0] = 1;
+				yearsArray.push(cloneDeep(currentDay));
 			}
 
-			totalDays--
+			totalDays--;
 		}
-
-		console.log(yearsArray);
-
+		
+		let newDate: IDatePicker.Date = cloneDeep(this.state.chosenDate);
+		yearsArray.forEach((year: IDatePicker.Year) => {
+			newDate = this.determineNewDate(year, newDate);
+		});
+		this.setState( {chosenDate: cloneDeep(newDate)});
 	}
 
 	render() {

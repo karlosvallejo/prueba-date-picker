@@ -168,7 +168,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 
 			if (!yearFound) {
 				//year no found, add year object
-				const year: IDatePicker.Year = {year: currentYear, possibleMonths: [{month: currentMonth, days: [selectedDay]}]};
+				const year: IDatePicker.Year = this.buildYearObject(currentYear, currentMonth, selectedDay);
 				chosenDate.possibleYears.push(year);
 			} else if (!monthFound) {
 				//year found, but no month. Add month object yo the current year
@@ -181,6 +181,10 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 			}
 			resolve(chosenDate);
 		});
+	}
+
+	buildYearObject(currentYear: number, currentMonth: number, selectedDay: number): IDatePicker.Year {
+		return {year: currentYear, possibleMonths: [{month: currentMonth, days: [selectedDay]}]}
 	}
 
 	handleSelect(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -223,17 +227,21 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 
 	handleRangePick(currentDay: number) {
 		const rangeSelection = cloneDeep(this.state.rangeSelection);
-		this.determineNewDate(currentDay).then((date: IDatePicker.Date) => {
-			console.log(date);
-		});
-		new Promise<Year>((resolve, reject) => {
+		let firstPick: IDatePicker.Year;
+		let secondPick: IDatePicker.Year;
+		firstPick = this.buildYearObject(cloneDeep(this.state.currentYear), cloneDeep(this.state.currentMonth), currentDay);
+		new Promise<number>((resolve, reject) => {
 			Object.assign(rangeSelection, {rangeSelectionSecondPickResolver: resolve});
 			this.setState({rangeSelection: rangeSelection});
-		}).then((year: IDatePicker.Year) => {
-			console.log(year);
+		}).then((secondCurrentDay: number) => {
+			secondPick = this.buildYearObject(cloneDeep(this.state.currentYear), cloneDeep(this.state.currentMonth), secondCurrentDay);
 			Object.assign(rangeSelection, {rangeSelectionSecondPickResolver: this.handleRangePick.bind(this)});
 			this.setState({rangeSelection: rangeSelection});
 		});
+	}
+
+	makeRange(firstPick: IDatePicker.Year, secondPick: IDatePicker.Year) {
+
 	}
 
 	render() {

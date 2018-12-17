@@ -41,62 +41,12 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		}
 	}
 
-	getNumbersOfDaysFromMonth(monthNumber: number): number {
-		let days: number = 20;
-		switch (monthNumber) {
-			case 1:
-				days = 31;
-				break;
-
-			case 2:
-				days = 28;
-				break;
-
-			case 3:
-				days = 31;
-				break;
-
-			case 4:
-				days = 30;
-				break;
-
-			case 5:
-				days = 31;
-				break;
-
-			case 6:
-				days = 30;
-				break;
-
-			case 7:
-				days = 31;
-				break;
-
-			case 8:
-				days = 31;
-				break;
-
-			case 9:
-				days = 30;
-				break;
-
-			case 10:
-				days = 31;
-				break;
-
-			case 11:
-				days = 30;
-				break;
-
-			case 12:
-				days = 31;
-				break;
-		}
-		return days;
+	getnumberOfDaysFromMonth(year: IDatePicker.Year) {
+		return moment(`${year.year}-${year.possibleMonths[0].month}`, "YYYY-MM").daysInMonth()
 	}
 
-	generateDays(monthNumber: number): JSX.Element[] {
-		let totalDays: number = this.getNumbersOfDaysFromMonth(monthNumber);
+	generateDays(year: IDatePicker.Year): JSX.Element[] {
+		let totalDays: number = this.getnumberOfDaysFromMonth(year);
 
 		return [...Array<JSX.Element>(totalDays)].map((val, index) => {
             return <div key={index + 1} className={this.state.daysForHighlight && this.state.daysForHighlight.includes(index + 1)? 'DatePicker-days-day DatePicker-days-day--active': 'DatePicker-days-day'} onClick={this.state.rangeSelection.rangeSelectionActive? (event: React.MouseEvent<HTMLDivElement>) => this.state.rangeSelection.rangeSelectionSecondPickResolver(index + 1) : (event: React.MouseEvent<HTMLDivElement>) => this.updateChosenDate(index + 1, event)}><p>{index + 1}</p></div>
@@ -247,7 +197,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 		yearsArray.push(cloneDeep(currentDay));
 
 		while (totalDays > 0) {
-			if ((currentDay.possibleMonths[0].days[0] + 1) <= this.getNumbersOfDaysFromMonth(currentDay.possibleMonths[0].month)) {
+			if ((currentDay.possibleMonths[0].days[0] + 1) <= this.getnumberOfDaysFromMonth(currentDay)) {
 				// Next Day
 				currentDay.possibleMonths[0].days[0]++;
 				yearsArray.push(cloneDeep(currentDay));
@@ -293,7 +243,7 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 						</div>
 			            <div className={'DatePicker-inferiorSection-wrapper'}>
 							<div className={'DatePicker-inferiorSection-days-wrapper'}>
-								{this.generateDays(this.state.currentMonth)}
+								{this.generateDays({year: this.state.currentYear, possibleMonths: [{month: this.state.currentMonth, days: [0]}]})}
 							</div>
 				            <div onAnimationEnd={this.onDropDownIsVisible.bind(this)} onTransitionEnd={this.onDropDownIsHidden.bind(this)} className={this.state.showDropDown? 'DatePicker-inferiorSection-yearsOptions-wrapper DatePicker-inferiorSection-yearsOptions-wrapper--active': 'DatePicker-inferiorSection-yearsOptions-wrapper'}>
 					            {this.state.dropDownElements === 'YEARS'? this.generateYears(2000, 2025): this.state.dropDownElements === 'MONTHS'? this.generateMonths(): null}

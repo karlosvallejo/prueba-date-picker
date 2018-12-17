@@ -18,25 +18,46 @@
 .DatePicker-selectors-wrapper {
     display: flex;
     flex-direction: row;
-    padding: 1vh 0.5vw;
+    padding: 1vh 3%;
     box-sizing: border-box;
     border-bottom: solid 0.15vh rgba(158,158,158 ,0.3);
 }
 
 .DatePicker-selectors-years {
+    transition: 100ms ease-in;
+    padding: 1%;
     flex-grow: 1;
+}
+
+.DatePicker-selectors-years:hover {
+    transition: 100ms ease-in;
+    background-color: rgba(227,242,253 ,1);
+    color: rgba(25,118,210 ,1);
+    cursor: pointer;
 }
 
 .DatePicker-selectors-years p {
     margin: 0;
+    text-align: center;
 }
 
 .DatePicker-selectors-months {
+    transition: 100ms ease-in;
+    padding: 1%;
     flex-grow: 1;
+    margin-right: 0.5%;
+}
+
+.DatePicker-selectors-months:hover {
+    transition: 100ms ease-in;
+    background-color: rgba(227,242,253 ,1);
+    color: rgba(25,118,210 ,1);
+    cursor: pointer;
 }
 
 .DatePicker-selectors-months p {
     margin: 0;
+    text-align: center;
 }
 
 .DatePicker-selectors-range {
@@ -79,9 +100,10 @@
 }
 
 .DatePicker-days-day:hover {
-    transition: 900ms ease-in;
+    transition: 200ms ease-in;
     color: rgba(255,255,255,1);
     background-color: rgba(187,222,251 ,1);
+    cursor: pointer;
 }
 
 .DatePicker-days-day p {

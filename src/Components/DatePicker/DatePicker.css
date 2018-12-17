@@ -70,8 +70,13 @@ p {
     border: none;
     color: rgba(0,0,0, 0.8);
 }
+
+.DatePicker-selectors-range:hover {
+   cursor: pointer;
+}
+
 .DatePicker-selectors-range:disabled {
-    background-color: rgba(144,202,249 ,1);
+    background-color: rgba(66,165,245 ,1);
     color: rgba(255,255,255,1);
 }
 
@@ -86,8 +91,12 @@ p {
     color: rgba(0,0,0, 0.8);
 }
 
+.DatePicker-selectors-single:hover {
+   cursor: pointer;
+}
+
 .DatePicker-selectors-single:disabled {
-    background-color: rgba(144,202,249 ,1);
+    background-color: rgba(66,165,245 ,1);
     color: rgba(255,255,255,1);
 }
 

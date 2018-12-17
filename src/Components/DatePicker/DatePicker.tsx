@@ -228,7 +228,9 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 	}
 
 	onDropDownIsHidden(event: React.TransitionEvent<HTMLDivElement>) {
-		this.setState({dropDownIsHidden: true, dropDownElements: null});
+		if (!this.state.dropDownIsHidden) {
+			this.setState({dropDownIsHidden: true, dropDownElements: null});
+		}
 	}
 
 	render() {

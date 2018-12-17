@@ -1,3 +1,7 @@
+p {
+    font-size: 0.8vw;
+}
+
 .DatePicker-wrapper-general {
     position: relative;
     width: 30%;
@@ -62,10 +66,33 @@
 
 .DatePicker-selectors-range {
     flex-grow: 1;
+    background-color: rgba(238,238,238 ,1);
+    border: none;
+    color: rgba(0,0,0, 0.8);
+}
+.DatePicker-selectors-range:disabled {
+    background-color: rgba(144,202,249 ,1);
+    color: rgba(255,255,255,1);
+}
+
+.DatePicker-selectors-range p {
+    margin: 0;
 }
 
 .DatePicker-selectors-single {
     flex-grow: 1;
+    background-color: rgba(238,238,238 ,1);
+    border: none;
+    color: rgba(0,0,0, 0.8);
+}
+
+.DatePicker-selectors-single:disabled {
+    background-color: rgba(144,202,249 ,1);
+    color: rgba(255,255,255,1);
+}
+
+.DatePicker-selectors-single p {
+    margin: 0;
 }
 
 .DatePicker-inferiorSection-wrapper {
@@ -92,6 +119,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: rgba(0, 0, 0, 0.8);
 }
 
 .DatePicker-days-day--active {
@@ -137,25 +165,37 @@
 .DatePicker-inferiorSection-yearsOptions-year {
     margin: 0.2%;
     width: 13.86%;
-    background-color: #61dafb;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-content: space-around;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.DatePicker-inferiorSection-yearsOptions-year:hover {
+    background-color: rgba(100,181,246 ,1);
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
 }
 
 .DatePicker-inferiorSection-yearsOptions-year p {
-   margin: 0;
+    margin: 0;
     text-align: center;
 }
 
 .DatePicker-inferiorSection-yearsOptions-month {
     margin: 0.2%;
     width: 16.26%;
-    background-color: #61dafb;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.DatePicker-inferiorSection-yearsOptions-month:hover {
+    background-color: rgba(100,181,246 ,1);
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
 }
 
 .DatePicker-inferiorSection-yearsOptions-month p {

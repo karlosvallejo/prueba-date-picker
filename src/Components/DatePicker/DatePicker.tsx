@@ -288,8 +288,8 @@ class DatePicker extends Component<IDatePicker.IPropsDatePicker, IDatePicker.ISt
 						<div className={'DatePicker-selectors-wrapper'}>
 		                    <div className={'DatePicker-selectors-years'} onClick={() => {this.state.dropDownIsHidden? this.setState({showDropDown: true, dropDownElements: 'YEARS'}): this.setState({showDropDown: false})}}><p>{this.state.currentYear}</p></div>
 							<div className={'DatePicker-selectors-months'} onClick={() => {this.state.dropDownIsHidden? this.setState({showDropDown: true, dropDownElements: 'MONTHS'}): this.setState({showDropDown: false})}}><p>{this.nameMonth(this.state.currentMonth)}</p></div>
-							<button className={'DatePicker-selectors-range'} type={'button'} disabled={this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, true)}>Range Selection</button>
-							<button className={'DatePicker-selectors-single'} type={'button'} disabled={!this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, false)}>Single Selection</button>
+							<button className={'DatePicker-selectors-range'} type={'button'} disabled={this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, true)}><p>Range Selection</p></button>
+							<button className={'DatePicker-selectors-single'} type={'button'} disabled={!this.state.rangeSelection.rangeSelectionActive} onClick={(event: React.MouseEvent<HTMLButtonElement>) => this.handleButtonRangeSelection(event, false)}><p>Single Selection</p></button>
 						</div>
 			            <div className={'DatePicker-inferiorSection-wrapper'}>
 							<div className={'DatePicker-inferiorSection-days-wrapper'}>
